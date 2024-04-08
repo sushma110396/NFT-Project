@@ -14,7 +14,7 @@ This project is a decentralized NFT marketplace that allows users to create thei
 - Smart Contracts: Solidity
 - Frontend: ReactJS
 - IPFS: For storing NFT images and metadata
-- Testing: Hardhat, Ethers.js, Waffle
+- Blockchain: Sepolia Testnet
 
 ### Prerequisites
 
