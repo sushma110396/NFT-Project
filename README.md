@@ -22,8 +22,8 @@ This project is a decentralized NFT marketplace that allows users to create thei
 
 To set up the repository and run the marketplace locally, run the below
 ```bash
-git clone https://github.com/OMGWINNING/NFT-Marketplace-Tutorial
-cd NFT-Marketplace-Tutorial
+git clone https://github.com/sushma110396/NFT-Project.git
+cd NFT-Project
 npm install
 npm start
 ```
