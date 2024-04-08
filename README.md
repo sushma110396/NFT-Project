@@ -27,3 +27,5 @@ cd NFT-Project
 npm install
 npm start
 ```
+
+
