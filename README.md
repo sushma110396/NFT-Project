@@ -1,6 +1,6 @@
 #  NFT Marketplace 
 
-This project is a decentralized NFT marketplace that allows users to create their own NFT collection from images at an IPFS url and view their NFT collection.
+This web application is a decentralized NFT marketplace that allows users to create their own NFT collection from images at an IPFS url and view their NFT collection.
 
 ## Features
 
