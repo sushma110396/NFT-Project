@@ -7,7 +7,7 @@ const FormData = require('form-data');
 
 export const uploadJSONToIPFS = async(JSONBody) => {
     const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
-    //making axios POST request to Pinata ??
+    //making axios POST request to Pinata ⬇️
     return axios 
         .post(url, JSONBody, {
             headers: {
@@ -33,7 +33,7 @@ export const uploadJSONToIPFS = async(JSONBody) => {
 
 export const uploadFileToIPFS = async(file) => {
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
-    //making axios POST request to Pinata ??
+    //making axios POST request to Pinata ⬇️
     
     let data = new FormData();
     data.append('file', file);
