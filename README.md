@@ -20,14 +20,22 @@ This web application is a decentralized NFT marketplace that allows users to cre
 
 - [MetaMask](https://metamask.io/) Ethereum wallet provider.
 
-To set up the repository and run the marketplace locally, run the below
+To set up the repository, run the below
 ```bash
 git clone https://github.com/sushma110396/NFT-Project.git
 cd NFT-Project
 npm install
-npm start
 ```
-The app should be available at [Localhost](http://localhost:3000/)
+
+Create a new .env file in the root of your project, which is right inside the NFT-Project folder, and add:
+1)The Alchemy API URL 
+2)The private key of the MetaMask wallet
+
+When you're done, your .env file should look like this:
+REACT_APP_ALCHEMY_API_URL="<YOUR_API_URL>"
+REACT_APP_PRIVATE_KEY="<YOUR_PRIVATE_KEY>"
+
+On running npm start,the app should be available at [Localhost](http://localhost:3000/)
 
 Note: I have used Cloudfare Ipfs to upload the images and metadata to IPFS. (It has been configured in utils.js file) . If cloudfare service is down, then the images for the NFTs might not load properly.
 To check if the cloudfare ipfs service is available, please use this link- [Public gateway checker](https://ipfs.github.io/public-gateway-checker/)
