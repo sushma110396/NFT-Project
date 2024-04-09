@@ -32,7 +32,9 @@ Create a new .env file in the root of your project, which is right inside the NF
 2)The private key of the MetaMask wallet
 
 When you're done, your .env file should look like this:
+
 REACT_APP_ALCHEMY_API_URL="<YOUR_API_URL>"
+
 REACT_APP_PRIVATE_KEY="<YOUR_PRIVATE_KEY>"
 
 On running npm start,the app should be available at [Localhost](http://localhost:3000/)
