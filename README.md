@@ -32,3 +32,5 @@ The app should be available at [Localhost](http://localhost:3000/)
 Note: I have used Cloudfare Ipfs to upload the images and metadata to IPFS. (It has been configured in utils.js file) . If cloudfare service is down, then the images for the NFTs might not load properly.
 To check if the cloudfare ipfs service is available, please use this link- [Public gateway checker](https://ipfs.github.io/public-gateway-checker/)
 
+Here are a few screenshots of the app hosted on IPFS:
+![marketplace](https://github.com/sushma110396/NFT-Project/assets/122709593/7b97c1a7-37a5-4db9-8d3d-181129cf6a2a)
