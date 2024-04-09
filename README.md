@@ -33,4 +33,6 @@ Note: I have used Cloudfare Ipfs to upload the images and metadata to IPFS. (It 
 To check if the cloudfare ipfs service is available, please use this link- [Public gateway checker](https://ipfs.github.io/public-gateway-checker/)
 
 Here are a few screenshots of the app hosted on IPFS:
-![marketplace](https://github.com/sushma110396/NFT-Project/assets/122709593/7b97c1a7-37a5-4db9-8d3d-181129cf6a2a)
+1) ![marketplace](https://github.com/sushma110396/NFT-Project/assets/122709593/7b97c1a7-37a5-4db9-8d3d-181129cf6a2a)
+2) ![upload](https://github.com/sushma110396/NFT-Project/assets/122709593/bacb07f9-d330-4e95-b953-54a786fabbf4)
+3) ![profile](https://github.com/sushma110396/NFT-Project/assets/122709593/ba73b73e-5cd5-4630-9922-74e570b73da8)
