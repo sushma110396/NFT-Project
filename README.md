@@ -7,7 +7,7 @@ This web application is a decentralized NFT marketplace that allows users to cre
 
 - Mint NFTs with custom images and metadata.
 - List your NFTs for sale.
-- Buy NFTs from the marketplace. using ETH/ERC 20 tokens
+- Buy NFTs from the marketplace using ETH/ERC20 tokens.
 - View your NFT collection.
 
 ## Technologies Used
@@ -55,6 +55,6 @@ To check if the cloudfare ipfs service is available, please use this link- [Publ
 
 ![marketplace](https://github.com/sushma110396/NFT-Project/assets/122709593/f460cbc2-10a2-41ef-941b-43dc7198eed3)
 
-4)Click on any of the NFT images to view the NFT detail page. Now switch to a different account on your wallet to test the Buy NFT functionality. You can buy NFT using either ETH/ERC 20 tokens by choosing the appropriate option from the dropdown and clicking on the buy button.
+4)Click on any of the NFT images to view the NFT detail page. Now switch to a different account on your wallet to test the Buy NFT functionality. You can buy NFT using either ETH/ERC20 tokens by choosing the appropriate option from the dropdown and clicking on the buy button.
 
 ![Buy NFT](https://github.com/sushma110396/NFT-Project/assets/122709593/e8c1b5f2-a4f3-49f3-99a9-86180243e771)
