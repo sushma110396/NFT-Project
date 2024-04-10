@@ -6,7 +6,7 @@ This web application is a decentralized NFT marketplace that allows users to cre
 
 - Mint NFTs with custom images and metadata.
 - List your NFTs for sale.
-- Buy NFTs from the marketplace.
+- Buy NFTs from the marketplace. using ETH/ERC 20 tokens
 - View your NFT collection.
 
 ## Technologies Used
@@ -42,7 +42,18 @@ On running npm start,the app should be available at [Localhost](http://localhost
 Note: I have used Cloudfare Ipfs to upload the images and metadata to IPFS. (It has been configured in utils.js file) . If cloudfare service is down, then the images for the NFTs might not load properly.
 To check if the cloudfare ipfs service is available, please use this link- [Public gateway checker](https://ipfs.github.io/public-gateway-checker/)
 
-Here are a few screenshots of the app hosted on IPFS:
-![marketplace](https://github.com/sushma110396/NFT-Project/assets/122709593/7b97c1a7-37a5-4db9-8d3d-181129cf6a2a)
-![upload](https://github.com/sushma110396/NFT-Project/assets/122709593/bacb07f9-d330-4e95-b953-54a786fabbf4) 
-![profile](https://github.com/sushma110396/NFT-Project/assets/122709593/ba73b73e-5cd5-4630-9922-74e570b73da8)
+Guide to use the application:
+1)Once the app loads, connect your metamask wallet by clicking "Connect Wallet" button. Make sure you have sufficient ETH in your wallet. Also, ensure you are on the Sepolia test network.
+
+2)Go to List My NFt tab and add your NFT to the marketplace by filling in the form.
+
+![List NFT](https://github.com/sushma110396/NFT-Project/assets/122709593/8bf64e07-cd46-4143-86ff-96c401e8a4f1)
+
+3)Once your NFT is successfully listed on the marketplace, you can view the NFT on the Marketplace tab.
+
+
+![marketplace](https://github.com/sushma110396/NFT-Project/assets/122709593/f460cbc2-10a2-41ef-941b-43dc7198eed3)
+
+4)Click on any of the NFT images to view the NFT detail page. Now switch to a different account on your wallet to test the Buy NFT functionality. You can buy NFT using either ETH/ERC 20 tokens by choosing the approprtate option from the dropdown and clicking on the buy button.
+
+![Buy NFT](https://github.com/sushma110396/NFT-Project/assets/122709593/e8c1b5f2-a4f3-49f3-99a9-86180243e771)
