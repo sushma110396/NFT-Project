@@ -70,7 +70,7 @@ function updateButton() {
 
         // Cleanup listener when component unmounts
         return () => window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
-    }, []); // Empty dependency array means this effect runs only on mount and unmount
+    }, [location.pathname]); // Empty dependency array means this effect runs only on mount and unmount
 
 
 

@@ -5,8 +5,9 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/access/Ownable.sol"; // Import Ownable
 
-contract NFTMarketplace is ERC721URIStorage {
+contract NFTMarketplace is ERC721URIStorage , Ownable{
 
     using Counters for Counters.Counter;
     //_tokenIds variable has the most recent minted tokenId
@@ -14,9 +15,11 @@ contract NFTMarketplace is ERC721URIStorage {
     //Keeps track of the number of items sold on the marketplace
     Counters.Counter private _itemsSold;
     //owner is the contract address that created the smart contract
-    address payable owner;
+    
     //The fee charged by the marketplace to be allowed to list an NFT
     uint256 listPrice = 0.01 ether;
+
+    address public erc20PaymentContract; // Variable to store ERC20 Payment Contract address
 
     //The structure to store info about a listed token
     struct ListedToken {
@@ -40,13 +43,19 @@ contract NFTMarketplace is ERC721URIStorage {
     mapping(uint256 => ListedToken) private idToListedToken;
 
     constructor() ERC721("NFTMarketplace", "NFTM") {
-        owner = payable(msg.sender);
+        
     }
 
-    function updateListPrice(uint256 _listPrice) public payable {
-        require(owner == msg.sender, "Only owner can update listing price");
-        listPrice = _listPrice;
+    // Add function to set the ERC20 Payment Contract address
+    function setERC20PaymentContract(address _erc20PaymentContract) public onlyOwner {
+        erc20PaymentContract = _erc20PaymentContract;
     }
+
+   function updateListPrice(uint256 _listPrice) public payable {
+    require(msg.sender == owner(), "Only owner can update listing price");
+    listPrice = _listPrice;
+}
+
 
     function getListPrice() public view returns (uint256) {
         return listPrice;
@@ -171,10 +180,31 @@ contract NFTMarketplace is ERC721URIStorage {
         approve(address(this), tokenId);
 
         //Transfer the listing fee to the marketplace creator
-        payable(owner).transfer(listPrice);
+        // Transfer the listing fee to the marketplace creator
+        payable(owner()).transfer(listPrice);
+
         //Transfer the proceeds from the sale to the seller of the NFT
         payable(seller).transfer(msg.value);
     }
+
+   function safeTransferNFT(address to, uint256 tokenId) public {
+    require(msg.sender == erc20PaymentContract, "Unauthorized: caller is not the ERC20 payment contract.");
+    require(_exists(tokenId), "Token does not exist.");
+    
+    address tokenOwner = ownerOf(tokenId);
+    require(tokenOwner != to, "Cannot transfer to the current owner.");
+
+    // Update the seller and the owner before transferring the token to the new owner
+    idToListedToken[tokenId].seller = payable(to);
+    idToListedToken[tokenId].owner = payable(to);
+
+    // Perform the token transfer
+    _transfer(tokenOwner, to, tokenId);
+    
+    // Update any other necessary state, like decrementing the available tokens for sale if needed
+}
+
+
 
     
 }
