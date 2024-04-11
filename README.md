@@ -36,12 +36,15 @@ npm install
 Create a new .env file in the root of your project, which is right inside the NFT-Project folder, and add:
 1)The Alchemy API URL 
 2)The private key of the MetaMask wallet
+3)API key of your Pinata account
+4)Pinata secret
 
 When you're done, your .env file should look like this:
 
 REACT_APP_ALCHEMY_API_URL="<YOUR_API_URL>"
-
 REACT_APP_PRIVATE_KEY="<YOUR_PRIVATE_KEY>"
+REACT_APP_PINATA_KEY="<YOUR_PINATA_KEY>"
+REACT_APP_PINATA_SECRET="<YOUR_PINATA_SECRET>"
 
 On running npm start,the app should be available at [Localhost](http://localhost:3000/)
 
