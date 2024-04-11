@@ -17,6 +17,11 @@ This web application is a decentralized NFT marketplace that allows users to cre
 - IPFS: For storing NFT images and metadata 
 - Blockchain: Sepolia Testnet
 
+## Contract links
+- ERC20 token contract: https://sepolia.etherscan.io/address/0x0C0c99A909606DdFE18432160D821A6301CE5FE8
+- NFT Marketplace ERC20 Payment contract: https://sepolia.etherscan.io/address/0xD2C7847405021506A8A3481A0c5652bE998e4860
+- Marketplace contract: https://sepolia.etherscan.io/address/0x8630802c3C34Ce0DA6FA6B7761db0Df3cf70BBd9
+
 ### Prerequisites
 
 - [MetaMask](https://metamask.io/) Ethereum wallet provider.
