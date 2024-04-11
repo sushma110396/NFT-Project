@@ -41,10 +41,12 @@ Create a new .env file in the root of your project, which is right inside the NF
 
 When you're done, your .env file should look like this:
 
+```bash
 REACT_APP_ALCHEMY_API_URL="<YOUR_API_URL>"
 REACT_APP_PRIVATE_KEY="<YOUR_PRIVATE_KEY>"
 REACT_APP_PINATA_KEY="<YOUR_PINATA_KEY>"
 REACT_APP_PINATA_SECRET="<YOUR_PINATA_SECRET>"
+```
 
 On running npm start,the app should be available at [Localhost](http://localhost:3000/)
 
