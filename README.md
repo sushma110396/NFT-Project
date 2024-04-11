@@ -1,6 +1,6 @@
 #  NFT Marketplace 
 
-This web application is a decentralized NFT marketplace that allows users to create their own NFT collection from images at an IPFS url and view their NFT collection. The app is hosted on Cloudfare IPFS at https://cloudflare-ipfs.com/ipfs/QmbNgzthmuMYsWX2x6myMuyPeMVnuEj5p5cgRQ1areD1Xw
+This web application is a decentralized NFT marketplace that allows users to create their own NFT collection from images at an IPFS url and view their NFT collection. It also allows the user to buy NFTs using ETH/ERC20 tokens. The app is hosted on Cloudfare IPFS at https://cloudflare-ipfs.com/ipfs/QmbNgzthmuMYsWX2x6myMuyPeMVnuEj5p5cgRQ1areD1Xw
 
 
 ## Features
