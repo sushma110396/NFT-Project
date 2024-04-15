@@ -4,9 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {
-  BrowserRouter,
-  Routes,
-  Route,
+    HashRouter as Router, 
+    Routes,
+    Route,
 } from "react-router-dom";
 import SellNFT from './components/SellNFT';
 import Marketplace from './components/Marketplace';
@@ -15,17 +15,16 @@ import NFTPage from './components/NFTpage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Marketplace />}/>
-        <Route path="/sellNFT" element={<SellNFT />}/> 
-        <Route path="/nftPage/:tokenId" element={<NFTPage />}/>        
-        <Route path="/profile" element={<Profile />}/> 
-      </Routes>
-    </BrowserRouter>
-  </React.StrictMode>
+    <React.StrictMode>
+        <Router> 
+            <Routes>
+                <Route path="/" element={<Marketplace />} />
+                <Route path="/sellNFT" element={<SellNFT />} />
+                <Route path="/nftPage/:tokenId" element={<NFTPage />} />
+                <Route path="/profile" element={<Profile />} />
+            </Routes>
+        </Router>
+    </React.StrictMode>
 );
-
 
 reportWebVitals();

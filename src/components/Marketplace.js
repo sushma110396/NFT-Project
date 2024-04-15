@@ -2,94 +2,76 @@ import Navbar from "./Navbar";
 import NFTTile from "./NFTTile";
 import MarketplaceJSON from "../Marketplace.json";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GetIpfsUrlFromPinata } from "../utils";
 
 export default function Marketplace() {
-const sampleData = [
-    {
-        "name": "NFT#1",
-        "description": "First NFT",
-        
-        "image":"",
-        "price":"0.03ETH",
-        "currentlySelling":"True",
-        "address":"0x3E1176bD44CE54e3a3205CeCB016646beBE01585",
-    },
-    {
-        "name": "NFT#2",
-        "description": "Second NFT",
-        
-        "image":"",
-        "price":"0.03ETH",
-        "currentlySelling":"True",
-        "address":"0x3E1176bD44CE54e3a3205CeCB016646beBE01585",
-    },
-    {
-        "name": "NFT#3",
-        "description": "Third NFT",
-        
-        "image":"",
-        "price":"0.03ETH",
-        "currentlySelling":"True",
-        "address":"0x3E1176bD44CE54e3a3205CeCB016646beBE01585",
-    },
-];
-const [data, updateData] = useState(sampleData);
-const [dataFetched, updateFetched] = useState(false);
+    const [data, setData] = useState([]);
+    const [walletConnected, setWalletConnected] = useState(false);
 
-async function getAllNFTs() {
-    const ethers = require("ethers");
-    //After adding your Hardhat network to your metamask, this code will get providers and signers
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    //Pull the deployed contract instance
-    let contract = new ethers.Contract(MarketplaceJSON.address, MarketplaceJSON.abi, signer)
-    //create an NFT Token
-    let transaction = await contract.getAllNFTs()
-
-    //Fetch all the details of every NFT from the contract and display
-    const items = await Promise.all(transaction.map(async i => {
-        var tokenURI = await contract.tokenURI(i.tokenId);
-        console.log("getting this tokenUri", tokenURI);
-        tokenURI = GetIpfsUrlFromPinata(tokenURI);
-        let meta = await axios.get(tokenURI);
-        meta = meta.data;
-
-        let price = ethers.utils.formatUnits(i.price.toString(), 'ether');
-        let item = {
-            price,
-            tokenId: i.tokenId.toNumber(),
-            seller: i.seller,
-            owner: i.owner,
-            image: meta.image,
-            name: meta.name,
-            description: meta.description,
+    useEffect(() => {
+        async function checkWalletConnected() {
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                setWalletConnected(accounts.length > 0);
+            }
         }
-        return item;
-    }))
 
-    updateFetched(true);
-    updateData(items);
-}
+        // Initial check to see if wallet is connected
+        checkWalletConnected();
 
-if(!dataFetched)
-    getAllNFTs();
+        // Reload NFTs whenever the wallet connection status changes
+        if (walletConnected) {
+            getAllNFTs();
+        }
 
-return (
-    <div>
-        <Navbar></Navbar>
-        <div className="flex flex-col place-items-center mt-20">
-            <div className="md:text-xl font-bold text-white">
-                Top NFTs
+        // Set up an event listener for when the account changes
+        window.ethereum?.on('accountsChanged', (accounts) => {
+            setWalletConnected(accounts.length > 0);
+        });
+    }, [walletConnected]);
+
+    async function getAllNFTs() {
+        const ethers = require("ethers");
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(MarketplaceJSON.address, MarketplaceJSON.abi, signer);
+
+        try {
+            const transaction = await contract.getAllNFTs();
+            const items = await Promise.all(transaction.map(async i => {
+                const tokenURI = GetIpfsUrlFromPinata(await contract.tokenURI(i.tokenId));
+                const meta = await axios.get(tokenURI).then(res => res.data);
+
+                return {
+                    price: ethers.utils.formatUnits(i.price.toString(), 'ether'),
+                    tokenId: i.tokenId.toNumber(),
+                    seller: i.seller,
+                    owner: i.owner,
+                    image: meta.image,
+                    name: meta.name,
+                    description: meta.description,
+                };
+            }));
+            setData(items);
+        } catch (error) {
+            console.error("Failed to get NFTs:", error);
+        }
+    }
+
+    return (
+        <div>
+            <Navbar setWalletConnected={setWalletConnected} />
+            <div className="flex flex-col place-items-center mt-20">
+                <div className="md:text-xl font-bold text-white">
+                    Top NFTs
+                </div>
+                <div className="flex mt-5 justify-between flex-wrap max-w-screen-xl text-center">
+                    {data.map((value, index) => (
+                        <NFTTile data={value} key={index} />
+                    ))}
+                </div>
             </div>
-            <div className="flex mt-5 justify-between flex-wrap max-w-screen-xl text-center">
-                {data.map((value, index) => {
-                    return <NFTTile data={value} key={index}></NFTTile>;
-                })}
-            </div>
-        </div>            
-    </div>
-);
-
+        </div>
+    );
 }

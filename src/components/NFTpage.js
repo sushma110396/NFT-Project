@@ -1,133 +1,125 @@
 import Navbar from "./Navbar";
-
 import { useParams } from 'react-router-dom';
 import MarketplaceJSON from "../Marketplace.json";
 import myERC20Token from "../myERC20Token.json";
-import nftMarketplaceERC20Payment from "../nftMarketplaceERC20Payment.json"
+import nftMarketplaceERC20Payment from "../nftMarketplaceERC20Payment.json";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GetIpfsUrlFromPinata } from "../utils";
-import { useEffect } from "react";
 
-export default function NFTPage(props) {
-
-    const [data, updateData] = useState({});
-    const [dataFetched, updateDataFetched] = useState(false);
-    const [message, updateMessage] = useState("");
-    const [currAddress, updateCurrAddress] = useState("0x");
-    const [paymentMethod, setPaymentMethod] = useState('ETH');
+export default function NFTPage() {
+    const [data, setData] = useState({});
     const [isOwner, setIsOwner] = useState(false);
-
-    const erc20TokenAddress = myERC20Token.address;// ERC20 Token Address
-    const erc20TokenAbi = myERC20Token.abi; // ERC20 Token ABI
-
-    async function getNFTData(tokenId) {
-        const ethers = require("ethers");
-
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const addr = await signer.getAddress();
-       
-
-        let contract = new ethers.Contract(MarketplaceJSON.address, MarketplaceJSON.abi, signer)
-
-        var tokenURI = await contract.tokenURI(tokenId);
-        const listedToken = await contract.getListedTokenForId(tokenId);
-        tokenURI = GetIpfsUrlFromPinata(tokenURI);
-        let meta = await axios.get(tokenURI);
-        meta = meta.data;
-        console.log(listedToken);
-        
-        setIsOwner(listedToken.owner.toLowerCase() === addr.toLowerCase());
-        let item = {
-            price: meta.price,
-            tokenId: tokenId,
-            seller: listedToken.seller,
-            owner: listedToken.owner,
-            image: meta.image,
-            name: meta.name,
-            description: meta.description,
-        }
-        console.log(item);
-        updateData(item);
-        updateDataFetched(true);
-        //console.log("address", addr)
-        updateCurrAddress(addr);
-        console.log("address", addr);
-        console.log("seller ", listedToken.seller);
-    }
-
-    async function buyNFT(tokenId) {
-        try {
-            const ethers = require("ethers");
-
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
-
-
-            let contract = new ethers.Contract(MarketplaceJSON.address, MarketplaceJSON.abi, signer);
-            const salePrice = ethers.utils.parseUnits(data.price, 'ether')
-            updateMessage("Buying the NFT... Please Wait (Upto 5 mins)")
-
-            let transaction = await contract.executeSale(tokenId, { value: salePrice });
-            await transaction.wait();
-            await getNFTData(tokenId);
-            alert('You successfully bought the NFT!');
-            updateMessage("");
-        }
-        catch (e) {
-            alert("Upload Error" + e)
-        }
-    }
-
-    async function buyNFTWithERC20(tokenId) {
-        try {
-            const ethers = require("ethers");
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
-
-            // Add ERC20 Token Contract
-            let erc20Contract = new ethers.Contract(erc20TokenAddress, erc20TokenAbi, signer);
-
-            // Specify the amount of tokens to be transferred as payment
-            const tokenAmount = ethers.utils.parseUnits(data.price, 'ether');
-
-            // Approve the ERC20PaymentContract to spend the tokens
-            updateMessage("Approving token transfer... Please wait.");
-            await (await erc20Contract.approve(nftMarketplaceERC20Payment.address, tokenAmount)).wait();
-
-            // Interact with the ERC20 Payment Contract
-            let paymentContract = new ethers.Contract(nftMarketplaceERC20Payment.address, nftMarketplaceERC20Payment.abi, signer);
-            updateMessage("Buying the NFT with ERC20 tokens... Please Wait (Upto 5 mins)");
-
-            let transaction = await paymentContract.buyNFT(tokenId, tokenAmount);
-            await transaction.wait();
-            await getNFTData(tokenId);
-            alert('You successfully bought the NFT with ERC20 tokens!');
-            updateMessage("");
-        } catch (e) {
-            alert("Transaction Error: " + e);
-        }
-    }
-
-    const params = useParams();
-    const tokenId = params.tokenId;
-    if (!dataFetched)
-        getNFTData(tokenId);
-    if (typeof data.image == "string")
-        data.image = GetIpfsUrlFromPinata(data.image);
-
-   
+    const [currAddress, setCurrAddress] = useState("");
+    const [message, setMessage] = useState("");
+    const [paymentMethod, setPaymentMethod] = useState('ETH');
+    const { tokenId } = useParams(); // Get tokenId from URL parameters
 
     useEffect(() => {
-        if (!dataFetched) {
-            getNFTData(tokenId);
+        const ethers = require("ethers");
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+
+        const fetchData = async () => {
+            try {
+                const addr = await signer.getAddress();
+                setCurrAddress(addr);
+
+                let contract = new ethers.Contract(MarketplaceJSON.address, MarketplaceJSON.abi, signer);
+                const tokenURI = await contract.tokenURI(tokenId);
+                const listedToken = await contract.getListedTokenForId(tokenId);
+                const formattedTokenUri = GetIpfsUrlFromPinata(tokenURI);
+                const response = await axios.get(formattedTokenUri);
+                const meta = response.data;
+
+                setIsOwner(listedToken.owner.toLowerCase() === addr.toLowerCase());
+                const newItem = {
+                    ...meta,
+                    price: ethers.utils.formatUnits(listedToken.price.toString(), 'ether'),
+                    tokenId,
+                    seller: listedToken.seller,
+                    owner: listedToken.owner,
+                    isOwner
+                };
+                setData(newItem);
+            } catch (error) {
+                console.error("Failed to fetch NFT data:", error);
+            }
+        };
+
+        fetchData();
+
+        const handleAccountsChanged = (accounts) => {
+            if (accounts[0]) {
+                fetchData();
+            }
+        };
+
+        window.ethereum.on('accountsChanged', handleAccountsChanged);
+
+        return () => {
+            window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+        };
+    }, [isOwner, tokenId]); // Effect runs on tokenId change
+
+    const buyNFT = async (tokenId) => {
+        const ethers = require("ethers");
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(MarketplaceJSON.address, MarketplaceJSON.abi, signer);
+        const salePrice = ethers.utils.parseUnits(data.price, 'ether');
+        setMessage("Buying the NFT... Please Wait (Upto 5 mins)");
+
+        try {
+            let transaction = await contract.executeSale(tokenId, { value: salePrice });
+            await transaction.wait(); // Wait for the transaction to be confirmed
+            setMessage("");
+            alert('You successfully bought the NFT!');
+
+            // After successful purchase, update the ownership status.
+            setIsOwner(true);
+            setData({ ...data, owner: currAddress }); // Update data with new owner
+
+        } catch (e) {
+            setMessage("");
+            alert("Transaction Error: " + e);
         }
-    }, [tokenId, dataFetched]);
+    };
+
+
+    const buyNFTWithERC20 = async (tokenId) => {
+        const ethers = require("ethers");
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const erc20Contract = new ethers.Contract(myERC20Token.address, myERC20Token.abi, signer);
+        const tokenAmount = ethers.utils.parseUnits(data.price, 'ether');
+        setMessage("Approving token transfer... Please wait.");
+
+        try {
+            const approvalTx = await erc20Contract.approve(nftMarketplaceERC20Payment.address, tokenAmount);
+            await approvalTx.wait(); // Ensure approval is confirmed
+
+            let paymentContract = new ethers.Contract(nftMarketplaceERC20Payment.address, nftMarketplaceERC20Payment.abi, signer);
+            const transaction = await paymentContract.buyNFT(tokenId, tokenAmount);
+            await transaction.wait(); // Ensure the transaction is confirmed
+
+            // Update the ownership status immediately after the transaction is confirmed
+            const newOwnerAddress = await signer.getAddress();
+            setIsOwner(true); // Assume the current user is now the owner
+            setData(prevData => ({ ...prevData, owner: newOwnerAddress })); // Update the owner in the state
+            setMessage("");
+            alert('You successfully bought the NFT with ERC20 tokens!');
+        } catch (e) {
+            console.error("Transaction Error: ", e.message);
+            setMessage("Transaction failed. Please try again.");
+        }
+    };
+
 
     return (
         <div style={{ "min-height": "100vh" }}>
-            <Navbar></Navbar>
+            <Navbar />
+            {/* Render NFT data here */}
             <div className="flex ml-20 mt-20">
                 <img src={data.image} alt="" className="w-2/5" />
                 <div className="text-xl ml-20 space-y-8 text-white shadow-2xl rounded-lg border-2 p-5">
@@ -166,5 +158,5 @@ export default function NFTPage(props) {
                 </div>
             </div>
         </div>
-    )
+    );
 }

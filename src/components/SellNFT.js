@@ -3,13 +3,15 @@ import { useState } from "react";
 import { uploadFileToIPFS, uploadJSONToIPFS } from "../pinata";
 import Marketplace from '../Marketplace.json';
 import { useLocation } from "react-router";
+import { useNavigate } from 'react-router-dom';
 
 export default function SellNFT () {
     const [formParams, updateFormParams] = useState({ name: '', description: '', price: ''});
     const [fileURL, setFileURL] = useState(null);
     const ethers = require("ethers");
     const [message, updateMessage] = useState('');
-    
+    const navigate = useNavigate();
+
     async function disableButton() {
         const listButton = document.getElementById("list-button")
         listButton.disabled = true
@@ -102,7 +104,7 @@ export default function SellNFT () {
             enableButton();
             updateMessage("");
             updateFormParams({ name: '', description: '', price: ''});
-            window.location.replace("/")
+            navigate('/');
         }
         catch(e) {
             alert( "Upload error"+e )
