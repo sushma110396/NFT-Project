@@ -2,7 +2,7 @@
 
 This web application is a decentralized NFT marketplace that allows users to create their own NFT collection from images at an IPFS url and view their NFT collection. It also allows the user to buy NFTs using ETH/ERC20 tokens. The app is hosted on IPFS at https://cf-ipfs.com/ipfs/bafybeign6iwkwdkwdj2472fser7izm6c4sqblbw6mo3yfx3zpxvyzw7pda
 
-Note: For part B: I have implemented the add on functionality where users can pay for NFTs using ERC20 tokens
+
 
 
 ## Features
